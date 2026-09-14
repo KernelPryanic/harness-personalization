@@ -50,7 +50,12 @@ folders and notes filed by date.
   upgrade. A multi-note effort gets a `projects/<id>/` subfolder; a single-note
   effort sits loose at the `projects/` root with the id in its title.
 - `reference/` holds how the systems work, independent of any effort: services,
-  vocabulary, procedures.
+  vocabulary, procedures. **Group it by subject once the flat listing stops
+  scanning** — `reference/access/`, `reference/debugging/`, `reference/process/`,
+  and friends, each folder one concern, earned the same way as top-level
+  folders: by the subject appearing, never speculatively. Don't folder a single
+  note; let it sit flat until siblings arrive. Retrieval searches across
+  folders, so group for the person browsing, not for search.
 - `people/` and `workplace/` hold the humans you work with and employment
   logistics.
 - `assets/` holds non-retrievable files by kind (`diagrams/`, `screenshots/`,

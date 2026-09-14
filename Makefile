@@ -1,17 +1,17 @@
-.PHONY: all claude opencode
+.PHONY: all opencode remove
 
-all: claude opencode
-
-claude:
-ifeq ($(OS),Windows_NT)
-	powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -Target claude
-else
-	sh install.sh claude
-endif
+all: opencode
 
 opencode:
 ifeq ($(OS),Windows_NT)
 	powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -Target opencode
 else
 	sh install.sh opencode
+endif
+
+remove:
+ifeq ($(OS),Windows_NT)
+	powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -Target remove
+else
+	sh install.sh remove
 endif

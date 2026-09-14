@@ -25,39 +25,31 @@ link() {
     echo "linked  $path -> $dest"
 }
 
-install_claude() {
-    for s in concise peers grimoire-note-taking; do
-        link "$HOME/.claude/skills/$s" "$repo/skills/$s"
-    done
-
-    claudemd="$HOME/.claude/CLAUDE.md"
-    import="@$repo/skills/concise/SKILL.md"
-    rule='In every repo, read its `AGENTS.md` (when present) and follow it.'
-    header="# Standing skill directives"
-
-    mkdir -p "$HOME/.claude"
-    if [ -f "$claudemd" ] && grep -qxF "$import" "$claudemd"; then
-        echo "ok      $claudemd"
+unlink() {
+    path="$1"
+    dest="$2"
+    if [ -L "$path" ]; then
+        current=$(readlink "$path")
+        if [ "$current" != "$dest" ]; then
+            echo "error: $path is a symlink to $current, not this repo; remove it manually" >&2
+            exit 1
+        fi
+        rm "$path"
+        echo "removed $path"
         return
     fi
-    if [ -f "$claudemd" ] && grep -q '^@.*concise' "$claudemd"; then
-        tmp=$(mktemp)
-        awk -v repl="$import" '!done && /^@.*concise/ { print repl; done=1; next } { print }' "$claudemd" > "$tmp"
-        mv "$tmp" "$claudemd"
-        grep -qxF "$rule" "$claudemd" || printf '\n%s\n' "$rule" >> "$claudemd"
-        echo "updated $claudemd"
-        return
+    if [ -e "$path" ]; then
+        echo "error: $path exists and is not a symlink; remove it manually" >&2
+        exit 1
     fi
-    if [ -f "$claudemd" ]; then
-        printf '\n%s\n\n%s\n\n%s\n' "$header" "$import" "$rule" >> "$claudemd"
-        echo "updated $claudemd"
-        return
-    fi
-    printf '%s\n\n%s\n\n%s\n' "$header" "$import" "$rule" > "$claudemd"
-    echo "wrote   $claudemd"
+    echo "absent  $path"
 }
 
 install_opencode() {
+    for s in concise peers grimoire-note-taking; do
+        link "$HOME/.config/opencode/skills/$s" "$repo/skills/$s"
+    done
+
     cmddir="$HOME/.config/opencode/command"
     src="$repo/command"
     mkdir -p "$(dirname "$cmddir")"
@@ -84,9 +76,32 @@ install_opencode() {
     echo "linked  $cmddir -> $src"
 }
 
+remove_opencode() {
+    for s in concise peers grimoire-note-taking; do
+        unlink "$HOME/.config/opencode/skills/$s" "$repo/skills/$s"
+    done
+
+    cmddir="$HOME/.config/opencode/command"
+    if [ -L "$cmddir" ]; then
+        unlink "$cmddir" "$repo/command"
+    elif [ -d "$cmddir" ]; then
+        if [ -e "$cmddir/start.md" ]; then
+            rm -f "$cmddir/start.md"
+            echo "removed $cmddir/start.md"
+        else
+            echo "absent  $cmddir/start.md"
+        fi
+        others=$(ls -A "$cmddir" | grep -vx 'start.md' || true)
+        if [ -z "$others" ]; then
+            rmdir "$cmddir" 2>/dev/null || true
+        fi
+    else
+        echo "absent  $cmddir"
+    fi
+}
+
 case "$target" in
-    claude) install_claude ;;
-    opencode) install_opencode ;;
-    all) install_claude; install_opencode ;;
-    *) echo "usage: install.sh [claude|opencode|all]" >&2; exit 2 ;;
+    opencode|all) install_opencode ;;
+    remove) remove_opencode ;;
+    *) echo "usage: install.sh [opencode|all|remove]" >&2; exit 2 ;;
 esac

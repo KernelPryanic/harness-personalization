@@ -1,5 +1,5 @@
 param(
-    [ValidateSet("claude", "opencode", "all")]
+    [ValidateSet("opencode", "all", "remove")]
     [string]$Target = "all"
 )
 
@@ -27,43 +27,31 @@ function Assert-Junction {
     Write-Host "linked  $Path -> $TargetPath"
 }
 
-function Install-Claude {
-    foreach ($s in $skills) {
-        Assert-Junction -Path "$env:USERPROFILE\.claude\skills\$s" -TargetPath "$repo\skills\$s"
-    }
-
-    $claudemd = "$env:USERPROFILE\.claude\CLAUDE.md"
-    $import = "@$repo\skills\concise\SKILL.md"
-    $rule = 'In every repo, read its `AGENTS.md` (when present) and follow it.'
-    $header = "# Standing skill directives"
-
-    if (Test-Path -LiteralPath $claudemd) {
-        $lines = @(Get-Content -LiteralPath $claudemd)
-        if ($lines -contains $import) {
-            Write-Host "ok      $claudemd"
-            return
+function Remove-Junction {
+    param([string]$Path, [string]$TargetPath)
+    if (Test-Path -LiteralPath $Path) {
+        $item = Get-Item -LiteralPath $Path -Force
+        if ($item.LinkType -ne "Junction") {
+            throw "$Path exists and is not a junction; remove it manually"
         }
-        $oldIndex = [array]::FindIndex($lines, { param($l) $l -match '^@\S*concise' })
-        if ($oldIndex -ge 0) {
-            $lines[$oldIndex] = $import
-            if ($lines -notcontains $rule) { $lines += @("", $rule) }
-            Set-Content -LiteralPath $claudemd -Value $lines
-            Write-Host "updated $claudemd"
-            return
+        if ("$($item.Target)" -ne $TargetPath) {
+            throw "$Path is a junction to '$($item.Target)', not this repo; remove it manually"
         }
-        Add-Content -LiteralPath $claudemd -Value @("", $header, "", $import, "", $rule, "")
-        Write-Host "updated $claudemd"
+        [System.IO.Directory]::Delete($Path)
+        Write-Host "removed $Path"
         return
     }
-
-    Set-Content -LiteralPath $claudemd -Value @($header, "", $import, "", $rule, "")
-    Write-Host "wrote   $claudemd"
+    Write-Host "absent  $Path"
 }
 
 function Install-Opencode {
     $ocDir = "$env:USERPROFILE\.config\opencode"
     if (-not (Test-Path -LiteralPath $ocDir)) {
         New-Item -ItemType Directory -Path $ocDir | Out-Null
+    }
+
+    foreach ($s in $skills) {
+        Assert-Junction -Path "$ocDir\skills\$s" -TargetPath "$repo\skills\$s"
     }
 
     $cmdDir = "$ocDir\command"
@@ -89,5 +77,34 @@ function Install-Opencode {
     Write-Host "linked  $cmdDir -> $src"
 }
 
-if ($Target -in "claude", "all") { Install-Claude }
+function Remove-Opencode {
+    $ocDir = "$env:USERPROFILE\.config\opencode"
+
+    foreach ($s in $skills) {
+        Remove-Junction -Path "$ocDir\skills\$s" -TargetPath "$repo\skills\$s"
+    }
+
+    $cmdDir = "$ocDir\command"
+    if (Test-Path -LiteralPath $cmdDir) {
+        $item = Get-Item -LiteralPath $cmdDir -Force
+        if ($item.LinkType -eq "Junction") {
+            Remove-Junction -Path $cmdDir -TargetPath "$repo\command"
+        } else {
+            if (Test-Path -LiteralPath "$cmdDir\start.md") {
+                Remove-Item -LiteralPath "$cmdDir\start.md" | Out-Null
+                Write-Host "removed $cmdDir\start.md"
+            } else {
+                Write-Host "absent  $cmdDir\start.md"
+            }
+            $others = @(Get-ChildItem -LiteralPath $cmdDir | Where-Object { $_.Name -ne "start.md" })
+            if ($others.Count -eq 0) {
+                [System.IO.Directory]::Delete($cmdDir)
+            }
+        }
+    } else {
+        Write-Host "absent  $cmdDir"
+    }
+}
+
 if ($Target -in "opencode", "all") { Install-Opencode }
+if ($Target -eq "remove") { Remove-Opencode }

@@ -20,7 +20,7 @@ location, `~/.config/opencode/skills/`, so it works on any host — including wh
 ## Install
 
 ```sh
-make            # install
+make install    # bare `make` works too
 make remove     # uninstall
 ```
 

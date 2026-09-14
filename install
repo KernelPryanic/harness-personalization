@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-target="${1:-install}"
+target="${1:-all}"
 repo=$(cd "$(dirname "$0")" && pwd)
 
 link() {
@@ -101,7 +101,7 @@ remove_opencode() {
 }
 
 case "$target" in
-    install) install_opencode ;;
+    opencode|all) install_opencode ;;
     remove) remove_opencode ;;
-    *) echo "usage: install.sh [install|remove]" >&2; exit 2 ;;
+    *) echo "usage: install.sh [opencode|all|remove]" >&2; exit 2 ;;
 esac

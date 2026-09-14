@@ -1,12 +1,10 @@
-.PHONY: all opencode remove
+.PHONY: install remove
 
-all: opencode
-
-opencode:
+install:
 ifeq ($(OS),Windows_NT)
-	powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -Target opencode
+	powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -Target install
 else
-	sh install.sh opencode
+	sh install.sh install
 endif
 
 remove:

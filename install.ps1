@@ -1,6 +1,6 @@
 param(
-    [ValidateSet("opencode", "all", "remove")]
-    [string]$Target = "all"
+    [ValidateSet("install", "remove")]
+    [string]$Target = "install"
 )
 
 $repo = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -106,5 +106,5 @@ function Remove-Opencode {
     }
 }
 
-if ($Target -in "opencode", "all") { Install-Opencode }
+if ($Target -eq "install") { Install-Opencode }
 if ($Target -eq "remove") { Remove-Opencode }

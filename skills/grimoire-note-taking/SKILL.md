@@ -156,6 +156,11 @@ one.
 - **Blocks reproduce something; they are not decoration.** A runnable check beats
   a pasted transcript. Paste output as text when the command can't be safely
   re-run.
+- **A pasted output is cut to the lines that carry the fact, and the cut is
+  marked.** Keep the output's shape — the columns and a representative run of
+  rows — so the reader recognizes their own re-run, and say what went (`top 10
+  of 40 rows shown, rest elided`). A silent truncation reads as the complete
+  result.
 - **An imported file is a draft.** Re-home it, add the summary and the links, and
   cut what the conversion dragged in.
 

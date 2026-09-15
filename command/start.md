@@ -1,7 +1,7 @@
 ---
 description: Read AGENTS.md and load the harness-personalization skills (concise, peers, grimoire-note-taking)
 ---
-Read `AGENTS.md` in the project root and follow it for the rest of this session. If it does not exist, continue without comment.
+Read `AGENTS.md` and `AGENT.md` in the project root and follow them for the rest of this session. If they does not exist, continue without comment.
 
 Then read and follow these skills for the rest of the session, at their installed location:
 

@@ -9,17 +9,21 @@ Check who else is working before you start, and unblock whoever you stop.
 
 ## Before shared work
 
-- Run `list_agents` before you begin. Any peer working in the same directory (or a
-  worktree of it) shares files, git state, and spawned processes with you, so
-  message it and agree who changes what before editing.
+- Run `list_agents` before you begin; pass `project_only: true` (or
+  `directory: "<path>"`) to narrow a machine-wide listing. Any peer working
+  in the same directory (or a worktree of it) shares files, git state, and
+  spawned processes with you, so message it and agree who changes what
+  before editing.
 - Stale entries are untargetable and hidden by default. A peer that vanished may
   have closed only recently, within the `staleMs` window, so re-run `list_agents`
   before concluding it is gone.
 
 ## Sending
 
-- Resolve the target with `list_agents` when unsure. Duplicate names require the
-  endpoint id shown there.
+- Resolve the target with `list_agents` when unsure. `to:` accepts a peer name,
+  an endpoint id (`ses_…`), or a session id. Duplicate names require the id.
+  Each row is one session endpoint — subagents list separately from their
+  parent, and a busy subagent is directly addressable.
 - Send one message per topic, self-contained: state what you did, what you need
   from them, and the `file:line` or command that matters. Peers see no files and
   no conversation history, only your text. Keep messages under 8 KB and batch

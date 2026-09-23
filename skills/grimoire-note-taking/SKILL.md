@@ -42,34 +42,44 @@ ever reads.** Every rule here follows from that.
 
 ## Vault layout
 
-The shape follows PARA (Forte), adapted. A vault earns each folder as the subject
-appears, so a new vault starts empty; copying a template scaffold produces empty
-folders and notes filed by date.
+One container shape at every scale. The vault, an activity, and a reference
+subject are the same thing at different widths — notes on one subject plus an
+`assets/` subfolder when those notes need non-retrievable files — so the rule
+that files a note also files an asset, at any depth, with no second structure
+to learn. PARA (Forte) collapsed to its two load-bearing poles; every folder is
+earned as its subject appears, so a new vault starts empty and a copied
+template scaffold produces empty folders and notes filed by date.
 
-- `projects/` holds an effort with an outcome: a ticket, an investigation, an
-  upgrade. A multi-note effort gets a `projects/<id>/` subfolder; a single-note
-  effort sits loose at the `projects/` root with the id in its title.
-- `reference/` holds how the systems work, independent of any effort: services,
-  vocabulary, procedures. **Group it by subject once the flat listing stops
-  scanning** — `reference/access/`, `reference/debugging/`, `reference/process/`,
-  and friends, each folder one concern, earned the same way as top-level
-  folders: by the subject appearing, never speculatively. Don't folder a single
-  note; let it sit flat until siblings arrive. Retrieval searches across
-  folders, so group for the person browsing, not for search.
-- `people/` and `workplace/` hold the humans you work with and employment
-  logistics.
-- `assets/` holds non-retrievable files by kind (`diagrams/`, `screenshots/`,
-  `scripts/`). A note references into it; nothing lives there unread.
-- The vault root holds Maps of Content (LYT, Milo): reading-order overviews that
-  link across folders. A MOC orients the reader and never holds facts its target
-  notes don't; an index that restates rots into a second copy.
+- **`activities/` holds the time-bound:** a named thread of work, bounded or
+  open-ended — a ticket, an investigation, an upgrade, an onboarding, a
+  standing duty, a dev-environment state. A single-note, asset-free activity
+  sits loose at the `activities/` root with the id in its title.
+- **`references/` holds the timeless:** how things work, independent of any
+  effort — systems, vocabulary, procedures, people, workplace logistics.
+  **Group it by subject once the flat listing stops scanning** —
+  `references/access/`, `references/debugging/`, and friends, each folder one
+  concern, earned the same way as top-level folders: by the subject appearing,
+  never speculatively. Don't folder a single note; let it sit flat until
+  siblings arrive. Retrieval searches across folders, so group for the person
+  browsing, not for search.
+- **An asset files where its note would live.** An asset documents a subject;
+  that subject's container is its home, whatever other notes borrow it —
+  borrowers embed it by vault-root-relative path (the app renders nothing
+  else). The kinds repeat at every level: `diagrams/`, `screenshots/`,
+  `scripts/`, `evidence/`. The vault root holds an `assets/` only for what
+  serves the vault as a whole; most vaults never earn one. Never nest an
+  `assets/` inside an `assets/`.
+- **The vault root holds Maps of Content** (LYT, Milo): reading-order
+  overviews that link across containers. A MOC orients the reader and never
+  holds facts its target notes don't; an index that restates rots into a
+  second copy.
 
-Subfolders:
+Activity subfolders:
 
-- **A subfolder is earned, not pre-created.** Create `projects/<id>/` when you
-  write the second note on the effort: `folder create` it, `note rename` the first
-  note in, then grep the old title for `[[links]]`. A move is a rename and breaks
-  pointers the same way.
+- **A subfolder is earned, not pre-created.** Create `activities/<id>/` when
+  the thread earns a second note or its first asset: `folder create` it,
+  `note rename` the notes in, then grep the old title for `[[links]]`. A move
+  is a rename and breaks pointers the same way.
 - **The id stays in the title inside the folder.** `Z2 15153813 Investigation and
   Findings`, never `Investigation and Findings`: a retrieved section carries no
   path, so the title is the reader's only context.

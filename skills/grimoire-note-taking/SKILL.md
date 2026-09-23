@@ -1,191 +1,95 @@
 ---
 name: grimoire-note-taking
-description: Use when writing, editing, splitting, or reorganizing notes in a Grimoire vault — what a note should contain, where it lives (vault layout, subject subfolders), how to title and section it so retrieval finds it, links, frontmatter, runnable blocks, diagrams, and keeping the vault self-consistent. Commands live in the grimoire-cli skill; use this one whenever the task is deciding what to write.
+description: "Use when writing, editing, splitting, or reorganizing notes in a Grimoire vault: note anatomy, the fractal vault layout, writing for retrieval, links, frontmatter, runnable blocks, diagrams, and keeping the vault coherent. Commands live in the grimoire-cli skill. Use whenever deciding what to write."
 ---
 
 # Grimoire note-taking
 
-**Sections are embedded and returned out of context — one section may be all an agent
-ever reads.** Every rule here follows from that.
+Retrieval returns one section out of context — that section may be all a reader ever sees. Every rule follows from this.
 
 ## Workflow
 
-1. **`search` the topic first.** If a note already covers it, extend that note; a
-   near-duplicate is worse than an untidy vault. If a note says something different,
-   one of the two is wrong: fix it rather than adding a third version.
-2. Draft the note with a title, a 1–3 sentence summary, and one heading per topic.
-3. **Revisit before finishing.** Cut what the reader's next action does not depend
-   on, remove the scaffolding of how you found out, and drop sections that restate
-   another.
-4. **Verify it retrieves.** Search a phrase you did *not* put in the title and check
-   that the note comes back. Writing a note is not the same as landing it.
+1. `search` first. Extend the note that covers it — a near-duplicate is worse than an untidy vault. If two notes disagree, one is wrong: fix it, never add a third.
+2. Draft: title, 1-3 sentence summary, one heading per topic.
+3. Reread: cut what the reader's next action doesn't depend on — how you found out, sections that restate another.
+4. Verify: search a phrase you didn't put in the title. The note must come back.
 
-## What a note is
+## A note
 
-- **One note, one subject.** If the title needs "and", it is two notes. Test: what
-  would it take to delete this note? If the answer is "rewrite four others", the
-  note is doing too much.
-- **The title is the retrieval handle.** Make it specific and self-describing:
-  `Ticket Event Stream Ingestion`, not `Session 1`. Never let a date or a number be
-  the only distinguisher.
-- **Open with a 1–3 sentence summary** of what the note is about. The human skimming
-  and the retriever both see this first.
-- **Keep it under a screen or two.** Past that it has outgrown its subject: split it
-  and link the parts. Cap anything unbounded (logs, session dumps) by folding the
-  durable conclusion into a subject note and letting the raw trail go.
-- **Notes are living.** Correct in place rather than appending a contradiction; a
-  note that argues with itself poisons retrieval.
-- **Where a note goes is the vault's decision, not yours.** Put it where notes on
-  that subject already live. Add a folder only when the subject has no home at all,
-  and give it one concern. Search and links do the finding, so file by subject,
-  never by where you happened to learn it.
+- One subject. Title needs "and" → two notes. Deleting it rewrites four others → too much.
+- The title is the retrieval handle: specific, self-describing — `Ticket Event Stream Ingestion`, not `Session 1`. Never a date or number as the only distinguisher.
+- Open with a 1-3 sentence summary. Keep under a screen or two. Longer → split and link. Fold logs and session dumps into a durable conclusion and let the raw trail go.
+- Living: correct in place. A note that argues with itself poisons retrieval.
+- File by subject, not by where you learned it.
 
-## Vault layout
+## Layout: one fractal shape at every scale
 
-One container shape at every scale. The vault, an activity, and a reference
-subject are the same thing at different widths — notes on one subject plus an
-`assets/` subfolder when those notes need non-retrievable files — so the rule
-that files a note also files an asset, at any depth, with no second structure
-to learn. PARA (Forte) collapsed to its two load-bearing poles; every folder is
-earned as its subject appears, so a new vault starts empty and a copied
-template scaffold produces empty folders and notes filed by date.
+Every folder — the vault root included — is the same container. Structuring a subfolder repeats the vault's recipe, so a correct structure is definable at any level.
 
-- **`activities/` holds the time-bound:** a named thread of work, bounded or
-  open-ended — a ticket, an investigation, an upgrade, an onboarding, a
-  standing duty, a dev-environment state. A single-note, asset-free activity
-  sits loose at the `activities/` root with the id in its title.
-- **`references/` holds the timeless:** how things work, independent of any
-  effort — systems, vocabulary, procedures, people, workplace logistics.
-  **Group it by subject once the flat listing stops scanning** —
-  `references/access/`, `references/debugging/`, and friends, each folder one
-  concern, earned the same way as top-level folders: by the subject appearing,
-  never speculatively. Don't folder a single note; let it sit flat until
-  siblings arrive. Retrieval searches across folders, so group for the person
-  browsing, not for search.
-- **An asset files where its note would live.** An asset documents a subject;
-  that subject's container is its home, whatever other notes borrow it —
-  borrowers embed it by vault-root-relative path (the app renders nothing
-  else). The kinds repeat at every level: `diagrams/`, `screenshots/`,
-  `scripts/`, `evidence/`. The vault root holds an `assets/` only for what
-  serves the vault as a whole; most vaults never earn one. Never nest an
-  `assets/` inside an `assets/`.
-- **The vault root holds Maps of Content** (LYT, Milo): reading-order
-  overviews that link across containers. A MOC orients the reader and never
-  holds facts its target notes don't; an index that restates rots into a
-  second copy.
+| Part | Earned when | Holds |
+|------|-------------|-------|
+| notes | always | one subject each, directly inside |
+| `assets/` | first non-retrievable file | `diagrams/`, `screenshots/`, `scripts/`, `evidence/` — same kinds at every level, never nested in an `assets/` |
+| child containers | the listing stops scanning | one concern per child, never a folder for one note |
+| `index.md` | children exist | a MOC: reading-order links, no facts its targets don't carry |
 
-Activity subfolders:
+- Retrieval crosses folders: children serve the browser, not search. Links are the knowledge structure.
+- An asset lives where its note would, at any depth. Borrowers embed by vault-root-relative path.
+- Structure is earned, never scaffolded: a new vault starts empty, a copied template yields empty folders and date-filed notes. A vault-root `assets/` serves the whole vault. Most never earn one.
 
-- **A subfolder is earned, not pre-created.** Create `activities/<id>/` when
-  the thread earns a second note or its first asset: `folder create` it,
-  `note rename` the notes in, then grep the old title for `[[links]]`. A move
-  is a rename and breaks pointers the same way.
-- **The id stays in the title inside the folder.** `Z2 15153813 Investigation and
-  Findings`, never `Investigation and Findings`: a retrieved section carries no
-  path, so the title is the reader's only context.
-- **Recurring roles make a folder read as a set:** Investigation and Findings (the
-  durable record), Runbook, Reproduction, Conclusion.
-- **No archive folder.** A concluded project stays where it is; its findings are
-  reference now. Trash (`note delete`) is for notes that are wrong or superseded,
-  not finished.
-- **No date- or number-named folders** (`2026-09/`, Johnny Decimal's `07
-  Projects`). A date is not a subject.
+Top-level kinds fix where a note starts. The fractal shape recurses below. Two standard kinds, not a closed set — any other top-level folder the owner wants is the same container under the same recipe:
+
+| Folder | Kind | Examples |
+|--------|------|----------|
+| `activities/` | time-bound: a named thread of work | ticket, investigation, onboarding, standing duty |
+| `references/` | timeless: how things work, independent of any effort | systems, vocabulary, procedures, people |
+
+- An activity sits loose at `activities/` root until a second note or first asset. Promote with `folder create` + `note rename`. Keep the id in every title inside (`Z2 15153813 Investigation and Findings`) — a retrieved section carries no path.
+- Every activity has one core note — the catch-up page. It holds the essential state, findings, commands with their output, and the assets that help, as briefly as clarity allows. A human new to the thread catches up from it alone.
+- A recurring activity's core is Investigation and Findings, supported by Runbook, Reproduction, Conclusion.
+- Never: an archive folder (a concluded activity stays put, its findings are references now) · `note delete` for finished work (trash is for wrong or superseded) · a date- or number-named folder (a date is not a subject).
 
 ## Write for retrieval
 
-- **Every section stands alone.** Name its subject in its own heading and its first
-  sentence. No "as described above", and no pronoun whose antecedent is three
-  headings back.
-- **Spell out entities once per section:** full service names, and every acronym
-  with its expansion the first time that section uses it.
-- **A heading per topic.** Sections of 3–10 lines retrieve better than one
-  200-line dump.
-- **Define every value you name.** A label is just a word until the note says how
-  it was derived and shows one worked value: `stale` means nothing next to "no
-  edit in 90 days" and `112d`.
-- **Mark what you observed.** A footnote is enough, so a derivation is never read
-  back as a measurement.
-- **Redundancy across notes is fine** where it makes each note self-sufficient.
-  Vagueness is not.
-- **Tables:** one fact per cell; three columns you can scan beat five you must
-  read. A cell longer than one line belongs below the table.
+- Sections stand alone: subject named in heading and first sentence. No "as described above", no pronouns reaching back three headings.
+- Spell out entities once per section: full service names, acronyms expanded on first use.
+- One heading per topic. 3-10-line sections retrieve better than a 200-line dump.
+- Define every value: `stale` means nothing next to "no edit in 90 days (112d)".
+- Bold one load-bearing sentence per section — not a highlight run.
+- Footnote what you observed. A derivation must never read back as a measurement.
+- Redundancy that keeps each note self-sufficient is fine. Vagueness is not.
+- Tables: one fact per cell. Three scannable columns beat five readable. A cell over one line belongs below the table.
 
 ## Links
 
-- Put `[[Note Title]]` **at the point the other note is needed**, in a sentence
-  that says why. A link dump at the bottom carries no information.
-- **When citing one claim, use `[[Note#Heading]]`** so the reader lands on the
-  paragraph you meant rather than the top of a long note. The heading must match
-  verbatim.
-- **Retrieval does not follow links.** State the one fact the reader needs to keep
-  going, then link for the rest.
-- A `[[Link]]` to a note that doesn't exist yet marks work to do. Don't create stub
-  notes to satisfy it.
-- **A claim from outside the vault carries its source, inline at the claim.** Link
-  the thing itself — repo, doc, ticket, release note — so the reader can check it;
-  a bare name makes them repeat the search you already did. External facts rot, so
-  say when a claim is second-hand ("per X's round-up") rather than read at the
-  source.
+- `[[Note Title]]` at the point of need, in a sentence saying why — a bottom link dump carries no information. Cite one claim as `[[Note#Heading]]`, heading verbatim.
+- Retrieval doesn't follow links: state the one fact needed to keep going, link for the rest.
+- A `[[link]]` to a missing note marks work to do — don't create stubs.
+- Outside claims carry their source inline (repo, doc, ticket, release note). Say when second-hand.
 
-## Keeping the vault coherent
+## Coherence
 
-The vault is one document: a fact stated twice must be stated the same way, and
-every pointer must still land.
+The vault is one document: a fact stated twice is stated the same way, and every pointer lands.
 
-- **Renaming or splitting a note breaks the pointers into it.** Grep the old title
-  before you finish and fix every `[[link]]` that named it. The index needs no
-  help; `note rename` prunes the old path itself.
-- **Moving a fact means deleting it from where it was.** "See X" with the old text
-  still sitting below it is worse than either alone.
-- **A count is a claim about a list.** "26 projects" above 27 names is a
-  contradiction: recount or drop the number.
+- `note rename` retargets inbound wikilinks. A link in frontmatter is data — check by hand.
+- Moving a fact means deleting it from where it was. "See X" over the old text is worse than either.
+- A count is a claim about a list: "26 projects" over 27 names is a contradiction. Recount or drop it.
 
 ## Frontmatter
 
-Keep only what you would filter on, never what the body already says. Reuse the
-keys the vault already uses, spelled the same way, rather than coining a synonym
-for one of them. No prose and no long values: frontmatter isn't indexed as
-content.
+Only what you would filter on. The body says the rest. Reuse the vault's existing keys, spelled the same. No prose, no long values.
 
 ## Executable blocks
 
-`bash` is builtin and the rest are one `kernel install` away, so write the check in
-whichever language reads clearest. Confirm with `kernel list` before relying on
-one.
+`bash` is builtin. The rest are a `kernel install` away (`kernel list` to confirm).
 
-- **One runner per note.** Interpreted kernels (`python`, `yaegi`) share state
-  across the note like notebook cells. `go` compiles each block as a standalone
-  program, so write those self-contained: `package main` and its own imports,
-  every block.
-- **Standard library only.** Grimoire never runs `pip install` or `go get`. A
-  block needing a third-party import assumes a prepared host; rewrite it against
-  the stdlib, or say so in the note.
-- **Tag the block when the language is ambiguous:** ` ```go {kernel=go} `. `go`
-  and `yaegi` both claim `go`/`golang`, and the default picks the newest version
-  of the first family alphabetically.
-- **Blocks reproduce something; they are not decoration.** A runnable check beats
-  a pasted transcript. Paste output as text when the command can't be safely
-  re-run.
-- **A pasted output is cut to the lines that carry the fact, and the cut is
-  marked.** Keep the output's shape — the columns and a representative run of
-  rows — so the reader recognizes their own re-run, and say what went (`top 10
-  of 40 rows shown, rest elided`). A silent truncation reads as the complete
-  result.
-- **An imported file is a draft.** Re-home it, add the summary and the links, and
-  cut what the conversion dragged in.
+- One runner per note. `python`/`yaegi` share state like notebook cells. `go` compiles each block standalone: `package main`, own imports, every block.
+- Stdlib only — no `pip install`/`go get`. Rewrite against the stdlib or say so in the note.
+- Tag ambiguous blocks: ` ```go {kernel=go} ` — `go` and `yaegi` both claim `go`.
+- A block reproduces something. A runnable check beats a pasted transcript.
+- Paste output only when unsafe to re-run: keep the columns and representative rows, mark the cut ("top 10 of 40, rest elided").
+- An imported file is a draft: re-home, summarize, link, cut what conversion dragged in.
 
 ## Diagrams and screenshots
 
-Neither is retrievable. The note carries the same content in text; the picture is
-the human's fast path. Put each one directly under the text it illustrates, never
-two in a row — a stack at the end of a section means one of them has no text.
-Write that text, then place it.
-
-- **Diagrams:** the vault's diagramming skill owns the style, the sizing, and the
-  render step.
-- **Screenshots:** size the window to the subject *before* shooting, then look at
-  the result. A view clipped at the wrong edge hides the part that mattered, and
-  an oversized viewport leaves a dead band down the middle. Match the width of the
-  shots already in the vault so they sit together. Close banners and scroll the
-  subject into frame first; cropping afterwards keeps the centre, which is rarely
-  the subject.
+Not retrievable — the text carries the content and the picture is the human's fast path. Place each directly under the text it illustrates, never two in a row. Diagrams: the vault's diagramming skill owns style, sizing, rendering. Screenshots: size the window to the subject, match existing shot widths, close banners, look at the result — cropping keeps the centre, rarely the subject.

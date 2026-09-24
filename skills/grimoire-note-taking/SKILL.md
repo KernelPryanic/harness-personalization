@@ -45,8 +45,8 @@ Top-level kinds fix where a note starts. The fractal shape recurses below. Two s
 | `references/` | timeless: how things work, independent of any effort | systems, vocabulary, procedures, people |
 
 - An activity sits loose at `activities/` root until a second note or first asset. Promote with `folder create` + `note rename`. Keep the id in every title inside (`Z2 15153813 Investigation and Findings`) — a retrieved section carries no path.
-- Every activity has one core note — the catch-up page. It holds the essential state, findings, commands with their output, and the assets that help, as briefly as clarity allows. A human new to the thread catches up from it alone.
-- A recurring activity's core is Investigation and Findings, supported by Runbook, Reproduction, Conclusion.
+- Every activity has one core note — the catch-up page. Title it `<id> Overview` (`Z2 15153813 Overview`), or `<activity> Overview` when there is no id (`Dev Environment Overview`). Never a bare `Overview`: it collides across activities and retrieves without context. It holds the essential state, findings, commands with their output, and the assets that help, as briefly as clarity allows — a human new to the thread catches up from it alone.
+- A recurring activity's supporting set: Runbook, Reproduction, Conclusion.
 - Never: an archive folder (a concluded activity stays put, its findings are references now) · `note delete` for finished work (trash is for wrong or superseded) · a date- or number-named folder (a date is not a subject).
 
 ## Write for retrieval
